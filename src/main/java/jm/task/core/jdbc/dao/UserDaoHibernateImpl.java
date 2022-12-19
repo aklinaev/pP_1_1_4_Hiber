@@ -21,39 +21,40 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.createSQLQuery("CREATE TABLE IF NOT EXISTS Person"
-                + "(id INTEGER not NULL AUTO_INCREMENT, "
-                + " firstName VARCHAR(50), "
-                + " lastName VARCHAR(50), "
-                + " age INTEGER, "
-                + " PRIMARY KEY ( id ))").executeUpdate();
-        transaction.commit();
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.createSQLQuery("CREATE TABLE IF NOT EXISTS Person"
+                    + "(id INTEGER not NULL AUTO_INCREMENT, "
+                    + " firstName VARCHAR(50), "
+                    + " lastName VARCHAR(50), "
+                    + " age INTEGER, "
+                    + " PRIMARY KEY ( id ))").executeUpdate();
+            transaction.commit();
+        } catch (Exception exception)  {
+            exception.printStackTrace();
+        }
     }
 
     @Override
     public void dropUsersTable() {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-//        sessionFactory.openSession().createNativeQuery("DROP TABLE IF EXISTS Person").executeUpdate();
-        session.createSQLQuery("DROP TABLE IF EXISTS Person").executeUpdate();
-        transaction.commit();
-
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.createSQLQuery("DROP TABLE IF EXISTS Person").executeUpdate();
+            transaction.commit();
+        } catch (Exception exception)  {
+            exception.printStackTrace();
+        }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
 
         try (Session session = sessionFactory.openSession()) {
-//            Transaction t = session.beginTransaction();
             User user = new User();
-//        user.setId(101);
             user.setName(name);
             user.setLastName(lastName);
             user.setAge(age);
             session.save(user);
-//            t.commit();
         } catch (Exception exception)  {
             exception.printStackTrace();
         }
@@ -79,7 +80,7 @@ public class UserDaoHibernateImpl implements UserDao {
         try (Session session = sessionFactory.openSession()) {
             TypedQuery<User> query = session.createQuery("SELECT y FROM User y", User.class);
             list = query.getResultList();
-        } catch (Exception exception)  {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
         return list;
@@ -87,9 +88,14 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        Session session = sessionFactory.openSession();
-        Transaction t = session.beginTransaction();
-        session.createQuery("DELETE FROM User").executeUpdate();
-        t.commit();
+        try (Session session = sessionFactory.openSession()) {
+            Transaction t = session.beginTransaction();
+            session.createQuery("DELETE FROM User").executeUpdate();
+            t.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }
+
+//Привет! @Игорь Рыжаков помоги пожалуйста понять обратную связь проверяющего по задаче  https://platform.kata.academy/fake/user/13038/courses/2/1/1/5

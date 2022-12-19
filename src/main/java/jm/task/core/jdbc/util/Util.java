@@ -24,7 +24,6 @@ public class Util {
             Properties prop= new Properties();
 
             prop.setProperty("hibernate.connection.url", url);
-
             prop.setProperty("dialect", dialect);
             prop.setProperty("hibernate.connection.username", userName);
             prop.setProperty("hibernate.connection.password", password);
@@ -34,8 +33,6 @@ public class Util {
                     .addProperties(prop)
                     .addAnnotatedClass(User.class)
                     .buildSessionFactory();
-//            Session session = sessionFactory.openSession();
-//            session.beginTransaction();
             return sessionFactory;
     }
 
